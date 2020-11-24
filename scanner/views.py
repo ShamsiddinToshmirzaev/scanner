@@ -1,8 +1,9 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializer import ScanTypeSerializer
-
 from .models import Scan_Type
+from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, TokenHasScope
+from rest_framework import permissions, serializers
 
 
 @api_view(['GET'])
@@ -19,6 +20,7 @@ def apiOverview(request):
 
 @api_view(['GET'])
 def typeList(request):
+    permission_classes = [permissions.IsAuthenticated, TokenHasReadWriteScope]
     types = Scan_Type.objects.all()
     serializer = ScanTypeSerializer(types, many=True)
     return Response(serializer.data)

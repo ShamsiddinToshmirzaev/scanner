@@ -6,3 +6,4 @@ class ScanTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Scan_Type
         fields = ('name', 'parent', 'command')
+
