@@ -8,6 +8,7 @@ class Target(models.Model):
     target = models.CharField(max_length=255)
     type = models.CharField(max_length=100)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    ip = models.CharField(max_length=100)
 
     def __str__(self):
         return self.target
@@ -36,11 +37,17 @@ class Scan(models.Model):
     target = models.ForeignKey(Target, on_delete=models.CASCADE)
     scan_type = models.ForeignKey(Scan_Type, on_delete=models.CASCADE)
     start_date = models.DateTimeField()
+    finish_date = models.DateTimeField()
     status = models.CharField(max_length=32, choices=STATUS, default=INACTIVE)
     progress = models.FloatField()
     command = models.CharField(max_length=200)
-    result_xml = JSONField(blank=True, null=True)
-    result_json = JSONField(blank=True, null=True)
 
     def __str__(self):
         return self.target.target
+
+
+class Result(models.Model):
+    xml = JSONField(null=True)
+    json = JSONField(null=True)
+
+
