@@ -6,7 +6,7 @@ from .models import Target, Scan_Type, Scan, Result
 
 
 class TargetAdmin(admin.ModelAdmin):
-    list_display = ('id', 'target', 'type', 'user',)
+    list_display = ('id', 'target', 'type', 'user', 'ip',)
     list_display_links = ('target',)
 
 
