@@ -121,33 +121,28 @@ def targetDetail(request, pk):
 
 @api_view(['POST'])
 def targetCreate(request):
-    pattern = "^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$"
+    pattern = "^(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?([^:\/?\n]+)"
     pattern2 = "^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$"
-    if pattern:
-        # prog = re.compile(pattern)
-        target = request.POST.get('target')
-        # target = prog.match(target1)
-        ip = socket.gethostbyname(urlparse(target).netloc)
-        type = "url"
 
-    elif pattern2:
-        # prog = re.compile(pattern2)
-        target = request.POST.get('target')
-        # target = prog.match(target2)
-        # return HttpResponse(target)
+    prog1 = re.compile(pattern)
+    prog2 = re.compile(pattern2)
+    target = request.POST.get('target')
+    prog_res_1 = prog1.match(target)
+    prog_res_2 = prog2.match(target)
+    if (prog_res_2 is not None):
         ip = socket.gethostbyname(target)
-        return HttpResponse(ip)
         type = "hostname"
-
+    elif (prog_res_1 is not None):
+        ip = socket.gethostbyname(urlparse(prog_res_1.string).netloc)
+        type = "url"
     else:
         return False
-    # return HttpResponse(ip)
 
     serializer = TargetSerializer(data=request.data)
 
     if serializer.is_valid():
         serializer.save(user=request.user, ip=ip, type=type)
-    return Response(serializer.data, 201)
+        return Response(serializer.data, 201)
 
 
 @api_view(['POST'])
@@ -188,6 +183,7 @@ def scanDetail(request, pk):
 @api_view(['POST'])
 def scanCreate(request):
     target = Target.objects.all().first()
+    # return HttpResponse(target)
     scan_type = Scan_Type.objects.all().first()
     # return HttpResponse(scan_type)
     serializer = ScanSerializer(data=request.data)

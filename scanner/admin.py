@@ -17,7 +17,7 @@ class ScanTypeAdmin(admin.ModelAdmin):
 
 
 class ScanAdmin(admin.ModelAdmin):
-    list_display = ('id', 'target', 'scan_type', 'start_date', 'status', 'progress', 'command')
+    list_display = ('id', 'target', 'scan_type', 'start_date', 'finish_date', 'status', 'progress', 'command')
 
 
 class ResultAdmin(admin.ModelAdmin):
